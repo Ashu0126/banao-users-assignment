@@ -1,0 +1,47 @@
+.card {
+  width: 100%;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  margin: 2rem 2rem 2rem 0;
+  animation: fadeIn 0.5s ease-in;
+  height: max-content;
+
+  @media (max-width: 765px) {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .avatar {
+    width: 100%;
+    background-color: #ccc;
+    height: 25rem;
+    object-fit: contain;
+
+    @media (max-width: 765px) {
+      height: 10rem;
+    }
+  }
+
+  .userInfo {
+    flex-grow: 1;
+
+    .name,
+    .jobTitle,
+    .bio,
+    .email,
+    .username {
+      height: 1rem;
+      background-color: #eee;
+      margin: 0.5rem 0;
+
+      @media (max-width: 765px) {
+        height: 0.5rem;
+        margin: 0.25rem 0;
+      }
+    }
+  }
+}

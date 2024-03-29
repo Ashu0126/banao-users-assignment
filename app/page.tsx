@@ -1,95 +1,108 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import styles from "./page.module.scss";
+import UserLoader from "./components/Loader";
+import CardLoader from "./components/CardLoader";
 
-export default function Home() {
+const Page = () => {
+  const [data, setData] = useState<any>();
+  const [user, setUser] = useState<any>();
+
+  const fetchData = async () => {
+    const res = await axios.get(
+      "https://602e7c2c4410730017c50b9d.mockapi.io/users"
+    );
+
+    setData(res?.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleClick = (username: any) => {
+    setUser(
+      data?.filter((user: any) => user?.profile?.username === username)?.[0]
+    );
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      {data ? (
+        <>
+          <div className={styles.userList}>
+            {data?.map((userDetails: any) => (
+              <div
+                key={userDetails?.profile?.firstName}
+                className={`${styles.user} ${
+                  userDetails?.profile?.username === user?.profile?.username &&
+                  styles.active
+                }`}
+                onClick={() => handleClick(userDetails?.profile?.username)}
+              >
+                <img
+                  src={userDetails?.avatar}
+                  alt=""
+                  onError={(e: any) =>
+                    (e.target.src =
+                      "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg")
+                  }
+                />
+                <div className={styles.userInfo}>
+                  <h3>{userDetails?.profile?.username}</h3>
+                  <p>{userDetails?.jobTitle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <section className={styles.cardSection}>
+            {user ? (
+              <div className={styles.card}>
+                <img
+                  src={
+                    user?.avatar ||
+                    "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
+                  }
+                  alt=""
+                  onError={(e: any) =>
+                    (e.target.src =
+                      "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg")
+                  }
+                  className={styles.avatar}
+                />
+                <div className={styles.userInfo}>
+                  <h2>
+                    {user?.profile?.firstName} {user?.profile?.lastName}
+                  </h2>
+                  <h4>{user?.jobTitle}</h4>
+                  <p>{user?.Bio}</p>
+                  <p>
+                    <span>Email:</span> {user?.profile?.email?.toLowerCase()}
+                  </p>
+                  <p>
+                    <span>Username:</span>{" "}
+                    {user?.profile?.username?.toLowerCase()}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <h1>Selected details will be shown here </h1>
+            )}
+          </section>
+        </>
+      ) : (
+        <>
+          <div className={styles.userList}>
+            <UserLoader />
+          </div>
+          <section className={styles.cardSection}>
+            <CardLoader />
+          </section>
+        </>
+      )}
     </main>
   );
-}
+};
+
+export default Page;

@@ -1,0 +1,51 @@
+.loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 20px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  width: 120px;
+  height: 20px;
+  background-color: #ccc;
+  margin-bottom: 10px;
+}
+
+.email {
+  width: 200px;
+  height: 20px;
+  background-color: #ccc;
+}
+
+/* Animation */
+.avatar {
+  animation: fadeIn 1s ease-in-out infinite alternate;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
